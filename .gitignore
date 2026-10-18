@@ -1,0 +1,71 @@
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+.mypy_cache/
+.ruff_cache/
+build/
+dist/
+*.egg-info/
+
+# ---------- Environments ----------
+.venv/
+venv/
+
+# ---------- Datasets (never commit) ----------
+MARIDA/
+patches/
+20210626/
+taco_raw/
+TACO-master/
+marine-debris-fls-datasets-master/
+utd2.v8i.yolo26/
+shapefiles/
+data/
+*.npz
+*.npy
+*.tif
+*.tiff
+*.nc
+*.jp2
+*.zip
+
+# ---------- Artifacts / runs / weights ----------
+artifacts/
+runs/
+weights/
+mlruns/
+wandb/
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.engine
+
+# ---------- Generated outputs ----------
+dashboard.html
+TECH-ATHON_Marine_Debris_Detection_Project.docx
+*.mp4
+*.mov
+
+# ---------- Editor / OS ----------
+.ipynb_checkpoints/
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# ---------- Tooling side effects ----------
+.playwright-mcp/
+
+# ---------- Reference literature (third-party PDFs; cite, don't vendor) ----------
+RP/
+
+# ---------- Secrets ----------
+.env
+.env.*
+*.pem
+*.key
+credentials.json

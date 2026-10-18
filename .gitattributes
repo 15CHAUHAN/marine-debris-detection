@@ -1,0 +1,19 @@
+# Normalize all text to LF. Every source file is already LF-only, so this is a
+# no-op locally but keeps the repo consistent when cloned on Linux (e.g. Colab).
+* text=auto eol=lf
+
+# Windows-native scripts keep CRLF
+*.bat   text eol=crlf
+*.ps1   text eol=crlf
+*.psm1  text eol=crlf
+
+# Never convert or diff these as text
+*.tif   binary
+*.tiff  binary
+*.npz   binary
+*.npy   binary
+*.pt    binary
+*.pth   binary
+*.png   binary
+*.jpg   binary
+*.pdf   binary

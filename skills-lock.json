@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "yolo": {
+      "source": "ultralytics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/yolo/SKILL.md",
+      "computedHash": "e575abc40c48d59cd5094e55c5aea6048f5441660393fd3fb76e02dae24249b2"
+    }
+  }
+}
