@@ -1,5 +1,6 @@
 # Marine Plastic Debris Detection (TECH-ATHON)
 
+[![Tests](https://github.com/15CHAUHAN/marine-debris-detection/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/15CHAUHAN/marine-debris-detection/actions/workflows/tests.yml)
 ![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python)
 ![PyTorch](https://img.shields.io/badge/PyTorch-cu126-orange?logo=pytorch)
 ![YOLOv8](https://img.shields.io/badge/YOLOv8s-Ultralytics-purple)
