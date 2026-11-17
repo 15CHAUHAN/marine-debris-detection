@@ -138,4 +138,4 @@ Inputs: a Sentinel-2 GeoTIFF, a MARIDA test patch, a drone image, or a drone/coa
 
 ## License
 
-No license has been chosen yet. Until one is added, all rights are reserved by the author. Dataset licences (MARIDA, TACO) apply separately.
+The code in this repository is released under the [MIT License](LICENSE). The datasets (MARIDA, TACO) and any third-party models or weights keep their own licences, which apply separately.
