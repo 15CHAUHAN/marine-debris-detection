@@ -13,7 +13,8 @@ A/B scope: plain U-Net (baseline) vs U-Net+Attention (candidate)
 |---|---|
 | Patches | 1381 (256x256, 11-band GeoTiff + _cl mask + _conf) |
 | Scenes | 63 S2 acquisitions |
-| Official split (scene-disjoint) | train 694 / val 328 / test 359 |
+| Official split (scene-disjoint) | train 694 / val 328 / test 359 (raw patches) |
+| Filtered training set | train 334 (694 raw, 360 dropped by `--filter-empty-dominance 0.90`) / val 328 / test 359 |
 | Unique scenes per split | train 36 / val 12 / test 15 (zero overlap) |
 | Working class set | 11 aggregated classes (see CONTEXT.md) |
 | Target class | Marine Debris (class 1), 373 patches |
@@ -40,7 +41,7 @@ Goal: scene-disjoint data loaders
 - `src/data/splits.py`: parse train_X.txt/val_X.txt/test_X.txt, return lists of patch IDs per split
 - Scene-grouped 10-fold generator using sklearn GroupKFold (group = scene)
 - Official test split sealed: used only for final evaluation, never for model selection
-- Success: train DataLoader yields 694 patches, val 328, test 359
+- Success: `splits.py` returns 694 / 328 / 359 raw patch IDs; the train DataLoader built with the dominance filter (`--filter-empty-dominance 0.90`, which drops zero-debris patches with one class above 90% of labeled pixels) yields 334 patches, val 328, test 359 (val and test are never filtered)
 
 ### Block 3: Preprocess + Augment (0.5 h)
 Goal: CLAHE on train, augmentation pipeline ready
