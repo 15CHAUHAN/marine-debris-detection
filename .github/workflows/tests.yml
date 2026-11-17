@@ -8,7 +8,9 @@ on:
 
 concurrency:
   group: tests-${{ github.ref }}
-  cancel-in-progress: true
+  # Cancel superseded runs on PRs only; on main let every push finish so the
+  # status badge never reflects a cancelled run.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   pytest:
