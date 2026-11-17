@@ -170,7 +170,7 @@ def convert_and_merge_split(
 ) -> tuple[int, int, Counter]:
     """Copy images and re-map labels into the target TACO dataset split."""
     tgt_img_dir = TACO_DATASET_DIR / "images" / split_name
-    tgt_lbl_dir = TACO_DATASET_DIR / "labels" / split_name
+    tgt_lbl_dir = TACO_DATASET_DIR / "labels" / split_n ame
     tgt_img_dir.mkdir(parents=True, exist_ok=True)
     tgt_lbl_dir.mkdir(parents=True, exist_ok=True)
 

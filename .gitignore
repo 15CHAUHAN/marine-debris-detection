@@ -62,6 +62,7 @@ desktop.ini
 
 # ---------- Reference literature (third-party PDFs; cite, don't vendor) ----------
 RP/
+papers_2025_2026/
 
 # ---------- Secrets ----------
 .env
