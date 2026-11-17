@@ -55,7 +55,8 @@ data-leakage audit.
 | Dtype / size | float32, 256×256, UTM CRS (EPSG varies by scene) |
 | Working class set | 11 aggregated classes (15 raw classes mapped) |
 | Target class | Marine Debris (class 1) — present in 373 of 1,381 patches |
-| Official split (scene-disjoint) | train 694 / val 328 / test 359 |
+| Official split (scene-disjoint) | train 694 / val 328 / test 359 (raw patches) |
+| Filtered training set | train **334** (694 raw − 360 dropped) / val 328 / test 359; filter applies to the train split only |
 | Scene split | train 36 / val 12 / test 15 scenes, zero overlap |
 
 ### Class presence (patches containing each aggregated class)
@@ -90,6 +91,12 @@ training-time augmentation):
    0-based training-target mapping used by all models and metrics.
 3. **Splits** — `src/data/splits.py`: official scene-disjoint split + a
    scene-grouped K-fold generator (GroupKFold, group = scene).
+   **Training-set filter** (`--filter-empty-dominance 0.90` in `scripts/train_one.py`,
+   implemented in `src/data/dataset.py`): drops training patches that contain zero
+   debris pixels and where one class covers more than 90 % of the labeled pixels.
+   This reduces the official train split from 694 to **334 patches** (360 dropped,
+   every debris-positive patch kept); val (328) and test (359) are never filtered.
+   The segmentation results in Section 5 come from this filtered 334-patch set.
 4. **Augmentation** — `src/data/augment.py`: CLAHE (`clipLimit=2.0, tileGridSize=8×8`)
    plus Albumentations spatial/color transforms, applied **only** to training data;
    NaN sanitization for a small number of inert patches.
@@ -158,7 +165,8 @@ IoU band because of extreme class rarity and the 1–6 px debris signatures.
 
 **Protocol** (`scripts/run_cross_validation.py`): GroupKFold grouped by **scene** on
 train+val (1,022 patches); the official test split (359 patches) is **held out**.
-20 epochs per fold, identical trainer config as the main runs, seed 42.
+20 epochs per fold, identical trainer config as the main runs, seed 42. The dominance
+filter is not applied in cross-validation, so folds use all train+val patches.
 
 ### Per-fold results (baseline variant)
 
@@ -200,7 +208,7 @@ split.
 | Generator | 100-dim noise → 11×256×256 (Sigmoid), 3.6 M params |
 | Critic | 11×256×256 → scalar Wasserstein score, 2.8 M params |
 | Loss | Wasserstein + gradient penalty (λ_gp = 10), n_critic = 5, grad clip 1.0 |
-| Training | 200 epochs on official train split (694 patches) |
+| Training | 200 epochs on the full official train split (694 patches; the dominance filter is not applied to GAN training) |
 | Artifacts | `artifacts/gan/generator.pt`, `checkpoint.pt`, epoch sample grids |
 
 **Augmented retrain protocol** (`scripts/train_gan_augmented.py`): 300 synthetic
