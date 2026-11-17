@@ -208,6 +208,7 @@ def test_class_breakdown_from_mask():
     assert _class_breakdown({"mask": None}) is None
 
 
+@pytest.mark.requires_data
 def test_scene_content_and_provenance_sections():
     det = _fake_det(fraction=0.05)
     mask = np.zeros((64, 64), dtype=np.int64)
@@ -222,6 +223,7 @@ def test_scene_content_and_provenance_sections():
         assert token in text, f"missing provenance token: {token!r}"
 
 
+@pytest.mark.requires_data
 def test_model_qa_section_from_variant():
     pdf = generate_pdf_report(_fake_det(fraction=0.02), model_name="U-Net + Attention",
                               geo_data=_GEO, source_name="12-12-20_16PCC_0",

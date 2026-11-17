@@ -47,6 +47,7 @@ def test_concentration_gradient_monotone():
     assert left < near_edge <= right
 
 
+@pytest.mark.requires_data
 def test_write_concentration_tiff_matches_source_georeference(marida_module: MaridaDataset, tmp_path):
     patch_id = marida_module.ids[0]
     meta = marida_module.read_meta(patch_id)

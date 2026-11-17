@@ -68,6 +68,7 @@ def test_scene_id_parses():
 
 
 class TestSeam:
+    @pytest.mark.requires_data
     def test_real_dataset_if_present(self, real_root):
         if real_root is None:
             pytest.skip("plastic_l2a artifacts not prepared")
@@ -167,6 +168,7 @@ class TestPrepareHelpers:
 
 
 class TestPrepareIntegration:
+    @pytest.mark.requires_data
     def test_prepared_artifacts_georeferenced(self, real_root):
         if real_root is None:
             pytest.skip("plastic_l2a artifacts not prepared")

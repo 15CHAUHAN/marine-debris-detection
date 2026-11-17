@@ -25,30 +25,35 @@ def splits(dataset):
     return official
 
 
+@pytest.mark.requires_data
 def test_official_split_counts(splits):
     assert len(splits["train"]) == 694
     assert len(splits["val"]) == 328
     assert len(splits["test"]) == 359
 
 
+@pytest.mark.requires_data
 def test_splits_cover_every_patch(dataset, splits):
     union = set(splits["train"]) | set(splits["val"]) | set(splits["test"])
     assert len(union) == 1381
     assert set(dataset.ids) == union
 
 
+@pytest.mark.requires_data
 def test_no_patch_leakage_between_splits(splits):
     assert not (set(splits["train"]) & set(splits["val"]))
     assert not (set(splits["train"]) & set(splits["test"]))
     assert not (set(splits["val"]) & set(splits["test"]))
 
 
+@pytest.mark.requires_data
 def test_all_ids_resolve_in_dataset(dataset, splits):
     for split in splits.values():
         for patch_id in split:
             assert patch_id in dataset
 
 
+@pytest.mark.requires_data
 def test_scene_grouped_folds_are_scene_disjoint(dataset):
     ids = dataset.ids
     folds = scene_grouped_folds(list(ids), dataset, n_folds=10, seed=42)
@@ -63,6 +68,7 @@ def test_scene_grouped_folds_are_scene_disjoint(dataset):
     assert len(scene_train) == 63 and len(scene_val) == 63, "all scenes eventually used"
 
 
+@pytest.mark.requires_data
 def test_scene_grouped_folds_cover_all_indices(dataset):
     ids = dataset.ids
     folds = scene_grouped_folds(list(ids), dataset, n_folds=10, seed=42)

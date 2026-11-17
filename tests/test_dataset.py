@@ -18,6 +18,7 @@ def marida():
     return MaridaDataset(ROOT)
 
 
+@pytest.mark.requires_data
 def test_train_transforms_are_stable_shapes(marida):
     patch_id = marida.ids[0]
     image = marida.read_image(patch_id)
@@ -31,6 +32,7 @@ def test_train_transforms_are_stable_shapes(marida):
         assert set(np.unique(aug_mask)).issubset(set(np.unique(mask)))
 
 
+@pytest.mark.requires_data
 def test_clahe_is_applied_only_to_the_pipeline(marida):
     patch_id = marida.ids[0]
     image = marida.read_image(patch_id)
@@ -51,6 +53,7 @@ def test_clahe_sanitizes_nan_pixels():
     assert enhanced.dtype == np.float32
 
 
+@pytest.mark.requires_data
 def test_identity_transform_is_passthrough(marida):
     patch_id = marida.ids[0]
     image = marida.read_image(patch_id)
@@ -61,6 +64,7 @@ def test_identity_transform_is_passthrough(marida):
     np.testing.assert_array_equal(out_mask, mask)
 
 
+@pytest.mark.requires_data
 def test_dataset_batch_shapes(marida):
     ids = list(marida.ids[:16])
     ds = MaridaSegmentationDataset(marida, ids, transform_fn=identity)
@@ -72,6 +76,7 @@ def test_dataset_batch_shapes(marida):
     assert mask.dtype == torch.int64
 
 
+@pytest.mark.requires_data
 def test_dataset_with_train_transforms(marida):
     ids = list(marida.ids[:8])
     ds = MaridaSegmentationDataset(marida, ids, transform_fn=wrap(TrainTransform()))
@@ -80,6 +85,7 @@ def test_dataset_with_train_transforms(marida):
     assert mask.min().item() >= 0 and mask.max().item() <= 11
 
 
+@pytest.mark.requires_data
 def test_dataset_count(marida):
     ids = list(marida.ids[:100])
     ds = MaridaSegmentationDataset(marida, ids)

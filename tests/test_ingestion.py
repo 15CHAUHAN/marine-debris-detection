@@ -14,15 +14,18 @@ def dataset():
     return MaridaDataset(ROOT)
 
 
+@pytest.mark.requires_data
 def test_dataset_discovers_all_patches(dataset):
     assert len(dataset) == 1381
     assert len(dataset.scene_ids) == 63
 
 
+@pytest.mark.requires_data
 def test_patch_index_resolves_all_ids(dataset):
     assert dataset.resolved_count() == 1381
 
 
+@pytest.mark.requires_data
 def test_image_shape_and_range(dataset):
     image = dataset.read_image(dataset.ids[0])
     assert image.shape == (11, 256, 256)
@@ -30,6 +33,7 @@ def test_image_shape_and_range(dataset):
     assert image.min() >= 0.0 and image.max() <= 1.0
 
 
+@pytest.mark.requires_data
 def test_mask_shape_and_value_range(dataset):
     mask = dataset.read_mask(dataset.ids[0])
     assert mask.shape == (256, 256)
@@ -37,6 +41,7 @@ def test_mask_shape_and_value_range(dataset):
     assert mask.min() >= 0 and mask.max() <= 11
 
 
+@pytest.mark.requires_data
 def test_meta_contains_georeferencing(dataset):
     meta = dataset.read_meta(dataset.ids[0])
     assert meta.band_count == 11
@@ -44,6 +49,7 @@ def test_meta_contains_georeferencing(dataset):
     assert meta.crs.startswith("EPSG:")
 
 
+@pytest.mark.requires_data
 def test_all_masks_are_encoded_within_range(dataset):
     for patch_id in dataset.ids:
         mask = dataset.read_mask(patch_id)
@@ -57,6 +63,7 @@ def test_scene_extraction_helpers():
         scene_from_patch_id("not-a-valid-id")
 
 
+@pytest.mark.requires_data
 def test_missing_patch_id_raises():
     dataset = MaridaDataset(ROOT)
     with pytest.raises(KeyError):

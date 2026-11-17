@@ -93,6 +93,7 @@ class TestWriteTrainManifest:
                 split_ids["val"], split_ids["test"],
             )
 
+    @pytest.mark.requires_data
     def test_reaudit_teacher_manifest_over_official_splits(self):
         manifest = reaudit_teacher_manifest("baseline")
         assert manifest["variant"] == "baseline"

@@ -126,6 +126,7 @@ def _id_to_stats(ds):
     return {pid: (nd, dom) for pid, nd, dom in zip(ds.ids, ds._debris_counts, ds._dominance)}
 
 
+@pytest.mark.requires_data
 def test_filter_is_disabled_when_threshold_zero_or_below(marida, clean_ds):
     for thr in (0.0, -1.0):
         ds = MaridaSegmentationDataset(
@@ -135,6 +136,7 @@ def test_filter_is_disabled_when_threshold_zero_or_below(marida, clean_ds):
         assert ds.n_dropped == 0
 
 
+@pytest.mark.requires_data
 def test_dominance_filter_only_drops_zero_debris_high_dominance(clean_ds, filtered_ds):
     clean_ids = set(clean_ds.ids)
     dropped_ids = clean_ids - set(filtered_ds.ids)
@@ -147,6 +149,7 @@ def test_dominance_filter_only_drops_zero_debris_high_dominance(clean_ds, filter
     assert len(dropped_ids) > 0
 
 
+@pytest.mark.requires_data
 def test_dominance_filter_preserves_all_debris_positive_patches(clean_ds, filtered_ds):
     assert filtered_ds.n_debris_positive == clean_ds.n_debris_positive
     kept_pos = set(filtered_ds.ids) & set(np.asarray(clean_ds.ids)[clean_ds.debris_positive_mask])

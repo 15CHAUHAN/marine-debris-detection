@@ -315,6 +315,7 @@ def test_corner_wgs84_is_closed_ring():
     assert corners[0] == corners[-1]
 
 
+@pytest.mark.requires_data
 def test_wgs84_conversion_on_real_utm_patch():
     """Real MARIDA UTM GeoTiff metadata must warp to plausible lat/lon."""
     from src.data.ingestion import MaridaDataset
