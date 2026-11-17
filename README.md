@@ -93,11 +93,13 @@ Datasets, checkpoints and run outputs are **not in this repository** because of 
 
 MARIDA official split (scene-disjoint, verified):
 
-| Split | Patches | Scenes |
-|---|---|---|
-| Train | 694 | 36 |
-| Val | 328 | 12 |
-| Test | 359 | 15 |
+| Split | Raw patches | Filtered patches | Scenes |
+|---|---|---|---|
+| Train | 694 | 334 | 36 |
+| Val | 328 | 328 (no filtering) | 12 |
+| Test | 359 | 359 (no filtering) | 15 |
+
+The filtered train count comes from `--filter-empty-dominance 0.90` in `scripts/train_one.py`: it drops training patches that have no debris pixels and where a single class covers more than 90 % of the labeled pixels. Validation and test are never filtered.
 
 For the drone path, `scripts/download_merge_drone_dataset.py` merges extra aerial litter datasets (for example the Zenodo marine litter set) into TACO's 7-class YOLO format. The 7 classes are Bottle, Can, Plastic bag, Cup, Wrapper/Sachet, Container and Other trash.
 
