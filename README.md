@@ -1,9 +1,22 @@
-# Marine Plastic Debris Detection
+# Marine Plastic Debris Detection (TECH-ATHON)
 
-Detecting floating marine plastic from **Sentinel-2 multispectral satellite imagery** (MARIDA benchmark) and **RGB drone images / video**, then turning the detections into a georeferenced **pollution concentration map** with an interactive dashboard.
+![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python)
+![PyTorch](https://img.shields.io/badge/PyTorch-cu126-orange?logo=pytorch)
+![YOLOv8](https://img.shields.io/badge/YOLOv8s-Ultralytics-purple)
+![License](https://img.shields.io/badge/License-MIT-green)
+
+A dual-scale deep learning pipeline that detects and maps marine plastic pollution at **satellite scale** (Sentinel-2 multispectral, MARIDA benchmark) and **close range** (RGB drone images / video), then turns the detections into a georeferenced **pollution concentration map** with an interactive dashboard.
 
 ```
 Satellite / Drone Image / Video  ->  Plastic Detection  ->  Concentration  ->  Pollution Map
+```
+
+## Architecture
+
+```
+Satellite path:  11-band Sentinel-2 patches (256x256) -> U-Net variants (best: scSE attention) -> 11-class segmentation map
+Drone path:      RGB images / video frames (resized to 640x640) -> YOLOv8s                      -> 7-class litter bounding boxes
+Both paths:      detections -> Gaussian concentration heatmap -> georeferenced GeoTIFF + Folium map + PDF report
 ```
 
 ## Highlights
@@ -29,6 +42,10 @@ Satellite / Drone Image / Video  ->  Plastic Detection  ->  Concentration  ->  P
 | `yolo_bilstm` (5 epochs) | 0.2523 | 0.7596 | 0.0389 | 0.0198 |
 
 **Read these honestly.** Marine Debris is a rare, small-object class and it is hard: the best debris IoU is about 0.09 and debris F1 about 0.16. `baseline` and `attention` are effectively tied on mean IoU; `attention` is slightly better on debris. The two YOLO hybrids were trained for only 5 epochs, so they are not directly comparable to the 20-epoch runs. WGAN-GP synthetic augmentation did **not** help and is not recommended. Full details, cross-validation numbers and negative results (box detector, CNN+LSTM classifier) are in [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md).
+
+**Drone / RGB path (YOLOv8s).** Trained on TACO merged with aerial marine-litter data (4,175 images: 2,811 train / 904 val / 460 test, 7 macro classes), it reaches **mAP@50 = 0.4444** on the held-out test split. These figures come from the project notes in [`docs/RESUME_PORTFOLIO_GUIDE.md`](docs/RESUME_PORTFOLIO_GUIDE.md). Training uses `cls=2.0` and `box=10.0` to favour precision.
+
+**Plastic L2A.** An external Sentinel-2 campaign prepared by `scripts/prepare_plastic_l2a.py`. It has no ground-truth labels yet, so it is used only for qualitative checks, not for reported metrics.
 
 ## Repository layout
 
@@ -73,6 +90,16 @@ Datasets, checkpoints and run outputs are **not in this repository** because of 
 | **MARIDA** Sentinel-2 patches | [Zenodo, MARIDA](https://doi.org/10.5281/zenodo.5151941) (Kikaki et al., 2022) | `patches/S2_<scene>/...` at the repo root |
 | **TACO** litter images | [tacodataset.org](http://tacodataset.org/) | prepared with `scripts/prepare_taco.py` |
 | Trained checkpoints | Not published. Train them (below). | `artifacts/<variant>/best.pth` |
+
+MARIDA official split (scene-disjoint, verified):
+
+| Split | Patches | Scenes |
+|---|---|---|
+| Train | 694 | 36 |
+| Val | 328 | 12 |
+| Test | 359 | 15 |
+
+For the drone path, `scripts/download_merge_drone_dataset.py` merges extra aerial litter datasets (for example the Zenodo marine litter set) into TACO's 7-class YOLO format. The 7 classes are Bottle, Can, Plastic bag, Cup, Wrapper/Sachet, Container and Other trash.
 
 The official split files in `splits/` are included. Check your environment and data layout with:
 
