@@ -22,7 +22,7 @@ TACO-master/
 marine-debris-fls-datasets-master/
 utd2.v8i.yolo26/
 shapefiles/
-data/
+/data/
 *.npz
 *.npy
 *.tif
