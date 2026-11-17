@@ -199,6 +199,7 @@ class TestDashboardSeam:
                            "plastic_l2a", None)
         assert meta is not None and meta["crs"] == "EPSG:32635"
 
+    @pytest.mark.requires_data
     def test_analyze_detection_plastic_l2a_with_dummy_model(self, tmp_path):
         import torch
 
