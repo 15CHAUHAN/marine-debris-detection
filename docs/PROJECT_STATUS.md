@@ -7,7 +7,8 @@ Status date: 15 Sep 2026. Pipeline: `Satellite/Drone Image/Video -> Plastic Dete
 - **MARIDA** (Sentinel-2 marine debris benchmark): 1381 patches, 63 scenes, 256x256, 11 spectral bands (B1-B8, B8A, B11, B12; 60 m bands B9/B10 excluded), float32, UTM CRS.
 - 15-class annotations were aggregated to the **11-class working set** (Waves, Cloud Shadows, Wakes, Mixed Water merged into Marine Water). Target class of interest: **Marine Debris (class 1)**, present in 373/1381 patches (~27%).
 - Per-pixel confidence masks (1/2/3) available for optional filtering; not used in the final runs.
-- **Official MARIDA split** (scene-disjoint, verified): 694 train / 328 val / 359 test, zero scene or patch leakage.
+- **Official MARIDA split** (scene-disjoint, verified): 694 train / 328 val / 359 test raw patches, zero scene or patch leakage.
+- **Filtered training set.** Training uses `--filter-empty-dominance 0.90` (`scripts/train_one.py`): training patches with zero debris pixels where one class covers more than 90% of the labeled pixels are dropped, which reduces the train split from 694 to **334 patches** (360 dropped; every debris-positive patch is kept). Validation (328) and test (359) are never filtered.
 - Data audit (see `artifacts/leakage_audit/report.json`): 0 exact duplicates, 74 near-duplicate pairs (>=0.985 similarity, mostly same-scene neighbors), 30 cross-split near-duplicate pairs flagged, 727 patches flagged for single-class dominance (mostly fully-marine-water or fully-cloud patches, i.e. easy negatives / label imbalance).
 
 ## 2. Implemented techniques
@@ -52,7 +53,7 @@ Tabs 4 and 5 also expose a one-click **"Download Official Pollution Incident Rep
 
 ## 4. Segmentation accuracy - official 359-patch test split
 
-Metrics computed on the untrained test split (11 classes). `mean IoU` = mean of per-class IoU. Best checkpoints from training on the 694-patch train split (val 328 held out during training).
+Metrics computed on the untrained test split (11 classes). `mean IoU` = mean of per-class IoU. Best checkpoints from training on the filtered 334-patch train split (694 raw patches minus 360 low-information, no-debris patches; val 328 held out during training and not filtered).
 
 | Model | mean IoU | Pixel accuracy | Debris F1 | Debris IoU | best epoch |
 |---|---|---|---|---|---|
