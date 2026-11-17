@@ -363,3 +363,13 @@ Each entry uses this structure:
 - `docs/PROJECT_STATUS.md`: Section 3 updated with the expanded report contents.
 - Tests: 10 new in `tests/test_report_generator.py` covering class breakdown, provenance tokens, model QA section, unit-conversion rows, inventory (with/without boxes), histogram + map panels, QR section, QR sizing regression (caught a bug where `barWidth/barHeight=1.5` produced an invisible 1.5pt barcode), and repeat-pass registry record/delta. Fixed zero-padding in `_acquisition_date` and the `best_frame_index` location (`info`, not `stats`). Verified `pytest tests/` 173/173 pass; rendered 4-page satellite and 3-page video reports.
 - (same date) Fixed "VISUAL EVIDENCE - SURFACE & DETECTION" panel alignment in `_evidence_strip`: the two strip tables were accidentally built as 2 rows x 3 columns (caption / spacer / image in separate columns, ~774pt wide vs 516pt frame) because each `cells[i]` is a list of flowables; rows are now wrapped `[[cells[0], cells[1]]]` so each cell stacks caption + spacer + image. All four panels are letterboxed with the new `_fit_panel` onto identical `panel_w x min(panel_w*h/w, panel_w)` boxes (no more per-panel height mismatch / aspect distortion), added `PANEL_BG` navy backdrop. 2 new tests assert the 1x2 grid shape + identical panel box sizes and the letterbox behavior. `pytest tests/` 175/175 pass.
+
+## 2026-11-17
+
+### Result: documentation aligned with the filtered 334-patch training split
+
+- Change / Decision: documented that segmentation training uses the dominance-filtered train split. `scripts/train_one.py --filter-empty-dominance 0.90` (implemented in `src/data/dataset.py`) drops training patches that contain zero debris pixels and where a single class covers more than 90% of the labeled pixels. This reduces the official train split from 694 to **334 patches** (360 dropped; every debris-positive patch kept). Validation (328) and test (359) are never filtered.
+- Scope notes: WGAN-GP training (`scripts/train_gan.py`) and the 10-fold cross-validation scripts do not apply the filter, so they still use the full 694 train patches (1,022 train+val for CV). `scripts/train_gan_augmented.py` defaults to a 0.95 threshold instead of 0.90.
+- Earlier entries in this log that quote "694/328/359" refer to the raw official MARIDA split and are left unchanged as a historical record; they remain accurate for that meaning.
+- Reasoning: the status, report and plan documents quoted only the raw 694-patch train count, which did not match the set the reported segmentation checkpoints were trained on.
+- Files affected: `README.md`, `docs/PROJECT_STATUS.md`, `docs/PROJECT_REPORT.md`, `docs/PLAN.md`, `docs/DEVELOPMENT_LOG.md`.
