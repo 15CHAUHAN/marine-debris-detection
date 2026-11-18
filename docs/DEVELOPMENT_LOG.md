@@ -373,3 +373,17 @@ Each entry uses this structure:
 - Earlier entries in this log that quote "694/328/359" refer to the raw official MARIDA split and are left unchanged as a historical record; they remain accurate for that meaning.
 - Reasoning: the status, report and plan documents quoted only the raw 694-patch train count, which did not match the set the reported segmentation checkpoints were trained on.
 - Files affected: `README.md`, `docs/PROJECT_STATUS.md`, `docs/PROJECT_REPORT.md`, `docs/PLAN.md`, `docs/DEVELOPMENT_LOG.md`.
+
+### Result: pre-archive repository audit - bugs found and fixed (commit c22884b)
+
+- Change / Decision: audited the local folder against a fresh GitHub clone (all 146 tracked files identical apart from line endings), compiled every Python file, linted for undefined names, ran `--help` on all 22 argparse scripts, imported all 38 `src` modules, validated README/doc links, scanned all commits for secrets, and ran the full suite (377 tests pass).
+- Bugs fixed:
+  - `scripts/download_merge_drone_dataset.py`: typo `split_n ame` was a SyntaxError, so the whole script could not run (introduced in the c4b3fcf commit; no test imports the scripts, so nothing caught it).
+  - `scripts/run_cross_validation.py`: `fold_ckpt` was never defined, so writing `model_selection_manifest.json` would raise NameError. It is now `out_dir/fold_<n>/best.pth`, which matches the existing manifest format.
+  - `scripts/train_gan_augmented.py`: `state`, `a_state` and `eval_state` were undefined after the `safe_load_state_dict` refactor (it returns the epoch, not the state). The returned epoch is used instead.
+  - `src/data/factory.py`: added the missing `import numpy as np` used in annotations.
+  - `src/detection/video_inference.py`: the `from_checkpoint` return annotation named a class that does not exist (`DroneDetector` is correct).
+  - `docs/RESUME_PORTFOLIO_GUIDE.md`: removed `file:///c:/Users/...` links (dead on GitHub, exposed a local path).
+- Guards added: `tests/test_syntax.py` parses every Python file; CI now runs `ruff check --select E9,F63,F7,F82,F811,F823` (syntax errors, undefined names, redefinitions).
+- Note: the fixes shipped inside commit c22884b, whose message mentions only the guard test and CI lint; this entry is the full record of its contents.
+- Files affected: `scripts/download_merge_drone_dataset.py`, `scripts/run_cross_validation.py`, `scripts/train_gan_augmented.py`, `src/data/factory.py`, `src/detection/video_inference.py`, `docs/RESUME_PORTFOLIO_GUIDE.md`, `tests/test_syntax.py`, `.github/workflows/tests.yml`, `docs/DEVELOPMENT_LOG.md`.
