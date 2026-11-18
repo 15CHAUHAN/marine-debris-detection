@@ -334,9 +334,9 @@ def main() -> None:
         raise SystemExit(f"teacher checkpoint not found: {teacher_ckpt}")
     teacher = resolve_variant(teacher_var, pretrained=False)
     from src.utils.checkpoint import safe_load_state_dict
-    safe_load_state_dict(teacher, teacher_ckpt, map_location="cpu")
+    teacher_epoch = safe_load_state_dict(teacher, teacher_ckpt, map_location="cpu")
     teacher.to(device).eval()
-    print(f"teacher={teacher_var} (epoch={state.get('epoch','?')})")
+    print(f"teacher={teacher_var} (epoch={teacher_epoch if teacher_epoch is not None else '?'})")
 
     # PRE-FLIGHT LEAKAGE VERIFICATION: the teacher must have been trained on a
     # train-only patch set (train_manifest.json), completely disjoint from the
@@ -360,9 +360,9 @@ def main() -> None:
             raise SystemExit(f"agreement checkpoint not found for --agreement-variant {agreement_var}: {agree_ckpt}")
         agreement_model = resolve_variant(agreement_var, pretrained=False)
         from src.utils.checkpoint import safe_load_state_dict
-        safe_load_state_dict(agreement_model, agree_ckpt, map_location="cpu")
+        agree_epoch = safe_load_state_dict(agreement_model, agree_ckpt, map_location="cpu")
         agreement_model.to(device).eval()
-        print(f"agreement model={agreement_var} (epoch={a_state.get('epoch','?')}) [ensemble consensus validation]")
+        print(f"agreement model={agreement_var} (epoch={agree_epoch if agree_epoch is not None else '?'}) [ensemble consensus validation]")
     else:
         mode = agreement_var if agreement_var else "self"
         if mode == "self":
@@ -566,7 +566,7 @@ def main() -> None:
     # ---- 6. Evaluate on official test split --------------------------------
     run_dir = Path(config.run_dir) / config.run_name
     from src.utils.checkpoint import safe_load_state_dict
-    safe_load_state_dict(model, run_dir / "best.pth", map_location="cpu")
+    eval_epoch = safe_load_state_dict(model, run_dir / "best.pth", map_location="cpu")
     model.to(device).eval()
     metrics_list = []
     with torch.no_grad():
@@ -584,7 +584,7 @@ def main() -> None:
         "iou_class_1_marine_debris": summary["iou_class_1_marine_debris"],
         "iou_per_class": summary["iou_per_class"],
         "f1_per_class": summary["f1_per_class"],
-        "checkpoint_epoch": eval_state.get("epoch", result["best_epoch"]),
+        "checkpoint_epoch": eval_epoch if eval_epoch is not None else result["best_epoch"],
         "n_real": len(real_ds),
         "n_real_dropped_by_dominance": int(real_ds.n_dropped),
         "n_synthetic_kept": int(synth_images.shape[0]),

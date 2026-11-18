@@ -146,7 +146,7 @@ class DroneDetector:
             checkpoint: str | Path | None = None,
             device: torch.device | None = None,
             **kwargs,
-        ) -> "VideoDebrisDetector":
+        ) -> "DroneDetector":
         """Build a detector from a registered variant checkpoint."""
         if checkpoint is None:
             checkpoint = Path("artifacts") / variant / "best.pth"

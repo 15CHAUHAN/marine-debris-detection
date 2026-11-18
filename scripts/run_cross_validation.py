@@ -237,6 +237,7 @@ def run_cv(
     if valid_folds:
         best_fold = max(valid_folds, key=lambda f: (f.get("val_debris_f1", 0.0), f.get("best_mean_iou", 0.0)))
         best_fold_idx = best_fold["fold"]
+        fold_ckpt = out_dir / f"fold_{best_fold_idx}" / "best.pth"
 
         # Write model selection manifest (CV only; do NOT overwrite production best.pth)
         manifest = {
@@ -245,7 +246,7 @@ def run_cv(
             "selection_metric": "val_debris_f1",
             "val_debris_f1": best_fold.get("val_debris_f1"),
             "val_mean_iou": best_fold.get("best_mean_iou"),
-            "fold_checkpoint": str(fold_ckpt.relative_to(ROOT)),
+            "fold_checkpoint": str(fold_ckpt.relative_to(ROOT) if fold_ckpt.is_relative_to(ROOT) else fold_ckpt),
             "cv_mean_f1": summary.get("mean_val_debris_f1"),
             "cv_std_f1": summary.get("std_val_debris_f1"),
             "timestamp": datetime.utcnow().isoformat() + "Z",

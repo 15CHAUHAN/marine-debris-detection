@@ -4,6 +4,7 @@ from __future__ import annotations
 import random
 from typing import Callable
 
+import numpy as np
 from torch.utils.data import DataLoader
 
 from .augment import identity, wrap

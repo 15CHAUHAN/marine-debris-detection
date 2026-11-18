@@ -63,15 +63,15 @@ When talking to interviewers, always back your claims with these exact figures:
 You already have high-value reports inside this workspace that you can directly reference or share with interviewers:
 
 1. **Complete Project Report**:
-   - [`docs/PROJECT_REPORT.md`](file:///c:/Users/ASUS/Desktop/TECH-ATHON/docs/PROJECT_REPORT.md): Full technical paper describing the methodology, ablation studies, model zoo, and findings.
+   - [`docs/PROJECT_REPORT.md`](PROJECT_REPORT.md): Full technical paper describing the methodology, ablation studies, model zoo, and findings.
 2. **Project Status & Engineering Log**:
-   - [`docs/PROJECT_STATUS.md`](file:///c:/Users/ASUS/Desktop/TECH-ATHON/docs/PROJECT_STATUS.md) and [`docs/DEVELOPMENT_LOG.md`](file:///c:/Users/ASUS/Desktop/TECH-ATHON/docs/DEVELOPMENT_LOG.md): Shows day-by-day development, architectural decisions, and debugging history.
+   - [`docs/PROJECT_STATUS.md`](PROJECT_STATUS.md) and [`docs/DEVELOPMENT_LOG.md`](DEVELOPMENT_LOG.md): Shows day-by-day development, architectural decisions, and debugging history.
 3. **Interactive Visual Dashboard**:
-   - [`dashboard.html`](file:///c:/Users/ASUS/Desktop/TECH-ATHON/dashboard.html): Self-contained HTML interactive dashboard showcasing test overlays, metrics, and comparisons.
+   - `dashboard.html` (generated locally by `scripts/build_dashboard.py`, not stored in the repo): Self-contained HTML interactive dashboard showcasing test overlays, metrics, and comparisons.
 4. **LaTeX Report Source**:
-   - [`docs/final_review_project_report.tex`](file:///c:/Users/ASUS/Desktop/TECH-ATHON/docs/final_review_project_report.tex): Formatted academic review document ready for PDF compilation.
+   - [`docs/final_review_project_report.tex`](final_review_project_report.tex): Formatted academic review document ready for PDF compilation.
 5. **Word Document Summary**:
-   - [`TECH-ATHON_Marine_Debris_Detection_Project.docx`](file:///c:/Users/ASUS/Desktop/TECH-ATHON/TECH-ATHON_Marine_Debris_Detection_Project.docx): Executive summary for university or competition submissions.
+   - `TECH-ATHON_Marine_Debris_Detection_Project.docx` (generated locally by `scripts/generate_project_document.py`, not stored in the repo): Executive summary for university or competition submissions.
 
 ---
 

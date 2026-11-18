@@ -40,6 +40,13 @@ jobs:
           grep -v -E '^(torch|torchvision)==' requirements.txt > requirements-ci.txt
           pip install -r requirements-ci.txt
 
+      # Catches syntax errors, undefined names and similar real bugs that no
+      # test exercises (several scripts are never imported by the test suite).
+      - name: Lint (syntax and undefined names)
+        run: |
+          pip install ruff==0.17.5
+          ruff check --isolated --select E9,F63,F7,F82,F811,F823 src scripts dashboard tests
+
       # Tests marked requires_data need MARIDA patches, TACO images or trained
       # artifacts, none of which are in the repository.
       - name: Run tests
